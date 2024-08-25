@@ -1,6 +1,8 @@
 import pygame
 
 # Base class for game objects
+
+
 class CircleShape(pygame.sprite.Sprite):
     def __init__(self, x, y, radius):
         # we will be using this later
@@ -12,6 +14,9 @@ class CircleShape(pygame.sprite.Sprite):
         self.position = pygame.Vector2(x, y)
         self.velocity = pygame.Vector2(0, 0)
         self.radius = radius
+
+    def colliding(self, other: 'CircleShape') -> bool:
+        pass
 
     def draw(self, screen) -> bool:
         # sub-classes must override

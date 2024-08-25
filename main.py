@@ -1,7 +1,8 @@
 import pygame
 from constants import *
 from player import *
-
+from asteroid import Asteroid
+from asteroidfield import AsteroidField
 
 def main():
     numpass, numfail = pygame.init()
@@ -9,9 +10,13 @@ def main():
     dt = 0
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
+    asteroids = pygame.sprite.Group()
+    AsteroidField.containers = (updatable, )
+    Asteroid.containers = (updatable, drawable, asteroids)
     Player.containers = (updatable, drawable)
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+    asteroidfield = AsteroidField()
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
