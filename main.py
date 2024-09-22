@@ -1,8 +1,16 @@
 import pygame
+import logging
 from constants import *
 from player import *
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
+
+# Set up logging
+logger = logging.getLogger(__name__)
+handler = logging.StreamHandler()
+handler.flush = lambda: handler.stream.flush()
+logger.addHandler(handler)
+logger.setLevel(logging.INFO)
 
 class Game:
     def __init__(self) -> None:
@@ -108,7 +116,7 @@ class Game:
             if not self.handle_events():
                 break
             if not self.update(dt):
-                print("Game Over!")
+                logger.info("Game Over!")
                 break
             self.draw()
             time_passed = self.clock.tick(60)
