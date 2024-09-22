@@ -1,7 +1,15 @@
+
 import pygame
 import random
 from asteroid import Asteroid
-from constants import *
+from constants import (
+    ASTEROID_MAX_RADIUS,
+    SCREEN_HEIGHT,
+    SCREEN_WIDTH,
+    ASTEROID_SPAWN_RATE,
+    ASTEROID_KINDS,
+    ASTEROID_MIN_RADIUS,
+)
 
 
 class AsteroidField(pygame.sprite.Sprite):
@@ -33,10 +41,30 @@ class AsteroidField(pygame.sprite.Sprite):
         self.spawn_timer = 0.0
 
     def spawn(self, radius, position, velocity):
+        """
+        Spawns a new asteroid with the specified radius, position, and velocity.
+
+        Args:
+            radius (int): The radius of the asteroid.
+            position (pygame.Vector2): The position of the asteroid.
+            velocity (pygame.Vector2): The velocity of the asteroid.
+
+        Returns:
+            None
+        """
         asteroid = Asteroid(position.x, position.y, radius)
         asteroid.velocity = velocity
 
     def update(self, dt):
+        """
+        Updates the asteroid field by incrementing the spawn timer and spawning a new asteroid if the timer exceeds the spawn rate.
+
+        Args:
+            dt (float): The time elapsed since the last update.
+
+        Returns:
+            None
+        """
         self.spawn_timer += dt
         if self.spawn_timer > ASTEROID_SPAWN_RATE:
             self.spawn_timer = 0
