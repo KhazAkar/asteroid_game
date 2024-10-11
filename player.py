@@ -6,7 +6,6 @@ from constants import (
     PLAYER_SPEED,
     SHOT_RADIUS,
     PLAYER_SHOOT_SPEED,
-    PLAYER_SHOOT_COOLDOWN,
 )
 from bullet import Shot
 
@@ -31,10 +30,10 @@ class Player(CircleShape):
             return True
         return False
 
-    def rotate(self, dt):
+    def rotate(self, dt: float):
         self.rotation += PLAYER_TURN_SPEED * dt
 
-    def update(self, dt):
+    def update(self, dt: float):
         """
         Update the player's position and orientation based on key inputs.
 
@@ -53,7 +52,7 @@ class Player(CircleShape):
         if self.cooldown > 0.0:
             self.cooldown -= dt
 
-    def move(self, dt):
+    def move(self, dt: float):
         """
         Updates the player's position based on their rotation and speed.
 
@@ -63,7 +62,7 @@ class Player(CircleShape):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += forward * PLAYER_SPEED * dt
 
-    def shoot(self, dt):
+    def shoot(self):
         bullet_position = self.position + pygame.Vector2(0, 1).rotate(self.rotation) * (
             self.radius + (2 * SHOT_RADIUS)
         )
