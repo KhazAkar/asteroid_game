@@ -1,10 +1,10 @@
 import pygame
 import logging
 from constants import *
-from player import *
+from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
-
+from bullet import Shot
 # Set up logging
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler()
@@ -21,9 +21,11 @@ class Game:
         self.updatable: pygame.sprite.Group = pygame.sprite.Group()
         self.drawable: pygame.sprite.Group = pygame.sprite.Group()
         self.asteroids: pygame.sprite.Group = pygame.sprite.Group()
+        self.shots: pygame.sprite.Group = pygame.sprite.Group()
         AsteroidField.containers = (self.updatable, )
         Asteroid.containers = (self.updatable, self.drawable, self.asteroids)
         Player.containers = (self.updatable, self.drawable)
+        Shot.containers = (self.updatable, self.drawable)
         self.screen: pygame.Surface = None
         self.player: Player = None
         self.asteroidfield: AsteroidField = None

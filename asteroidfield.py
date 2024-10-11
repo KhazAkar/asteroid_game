@@ -40,7 +40,7 @@ class AsteroidField(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.spawn_timer = 0.0
 
-    def spawn(self, radius, position, velocity):
+    def spawn(self, radius: int, position: pygame.Vector2, velocity: pygame.Vector2):
         """
         Spawns a new asteroid with the specified radius, position, and velocity.
 
@@ -54,8 +54,8 @@ class AsteroidField(pygame.sprite.Sprite):
         """
         asteroid = Asteroid(position.x, position.y, radius)
         asteroid.velocity = velocity
-
-    def update(self, dt):
+        
+    def update(self, dt: float) -> None:
         """
         Updates the asteroid field by incrementing the spawn timer and spawning a new asteroid if the timer exceeds the spawn rate.
 

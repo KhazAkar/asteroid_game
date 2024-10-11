@@ -1,6 +1,13 @@
 import pygame
 from circleshape import CircleShape
-from constants import PLAYER_RADIUS, PLAYER_TURN_SPEED, PLAYER_SPEED
+from constants import (
+    PLAYER_RADIUS,
+    PLAYER_TURN_SPEED,
+    PLAYER_SPEED,
+    SHOT_RADIUS,
+    PLAYER_SHOOT_SPEED,
+)
+from bullet import Shot
 
 
 class Player(CircleShape):
@@ -11,8 +18,7 @@ class Player(CircleShape):
 
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
-        right = pygame.Vector2(0, 1).rotate(
-            self.rotation + 90) * self.radius / 1.5
+        right = pygame.Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5
         a = self.position + forward * self.radius
         b = self.position - forward * self.radius - right
         c = self.position - forward * self.radius + right
@@ -27,6 +33,12 @@ class Player(CircleShape):
         self.rotation += PLAYER_TURN_SPEED * dt
 
     def update(self, dt):
+        """
+        Update the player's position and orientation based on key inputs.
+
+        Parameters:
+            dt (float): Time elapsed since the last update in seconds.
+        """
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
             self.rotate(-dt)
@@ -36,7 +48,19 @@ class Player(CircleShape):
             self.move(dt)
         if keys[pygame.K_s]:
             self.move(-dt)
+        if keys[pygame.K_SPACE]:
+            self.shoot(dt)
 
     def move(self, dt):
+        """
+        Updates the player's position based on their rotation and speed.
+
+        Parameters:
+        - dt (float): The time delta between frames in seconds.
+        """
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += forward * PLAYER_SPEED * dt
+
+    def shoot(self, dt):
+        bullet = Shot(self.position.x, self.position.y, SHOT_RADIUS)
+        bullet.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
