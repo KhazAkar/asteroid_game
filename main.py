@@ -5,6 +5,7 @@ from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from bullet import Shot
+
 # Set up logging
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler()
@@ -12,17 +13,18 @@ handler.flush = lambda: handler.stream.flush()
 logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
+
 class Game:
     def __init__(self) -> None:
         """
-        Initializes a new instance of the Game class, setting up the necessary groups for updatable and drawable game elements, 
+        Initializes a new instance of the Game class, setting up the necessary groups for updatable and drawable game elements,
         and initializing the game's screen, player, asteroid field, and clock.
         """
         self.updatable: pygame.sprite.Group = pygame.sprite.Group()
         self.drawable: pygame.sprite.Group = pygame.sprite.Group()
         self.asteroids: pygame.sprite.Group = pygame.sprite.Group()
         self.shots: pygame.sprite.Group = pygame.sprite.Group()
-        AsteroidField.containers = (self.updatable, )
+        AsteroidField.containers = (self.updatable,)
         Asteroid.containers = (self.updatable, self.drawable, self.asteroids)
         Player.containers = (self.updatable, self.drawable)
         Shot.containers = (self.updatable, self.drawable)
@@ -33,8 +35,8 @@ class Game:
 
     def initialize(self) -> None:
         """
-        Initializes the game by setting up the Pygame environment, creating a game screen, 
-        spawning a player at the center of the screen, creating an asteroid field, and 
+        Initializes the game by setting up the Pygame environment, creating a game screen,
+        spawning a player at the center of the screen, creating an asteroid field, and
         initializing a clock to control the game's framerate.
 
         Args:
@@ -62,6 +64,10 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                if self.player.cooldown <= 0:
+                    self.shots.add(self.player.shoot(0))
+                    self.player.cooldown = PLAYER_SHOOT_COOLDOWN
         return True
 
     def update(self, dt: float) -> bool:
@@ -82,11 +88,20 @@ class Game:
             if self.player.collision_check(asteroid):
                 return False
 
+        # Check for collisions between shots and asteroids
+        for shot in self.shots:
+            for asteroid in self.asteroids:
+                distance = shot.position.distance_to(asteroid.position)
+                if distance < shot.radius + asteroid.radius:
+                    shot.kill()
+                    asteroid.kill()
+                    break
+
         return True
 
     def draw(self) -> None:
         """
-        Draws the current game state by filling the screen with a black color, 
+        Draws the current game state by filling the screen with a black color,
         drawing all drawable elements, and updating the display.
 
         Args:
@@ -103,12 +118,12 @@ class Game:
     def run(self) -> None:
         """
         Runs the main game loop, initializing the game, handling events, updating the game state, and drawing the game screen.
-        
+
         This function continues to run until the game is quit or a game over condition is met.
-        
+
         Args:
             None
-        
+
         Returns:
             None
         """
@@ -126,9 +141,11 @@ class Game:
 
         pygame.quit()
 
+
 def main() -> None:
     game = Game()
     game.run()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
