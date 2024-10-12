@@ -66,7 +66,7 @@ class Game:
                 return False
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 if self.player.cooldown <= 0:
-                    self.shots.add(self.player.shoot(0))
+                    self.shots.add(self.player.shoot())
                     self.player.cooldown = PLAYER_SHOOT_COOLDOWN
         return True
 
@@ -94,7 +94,7 @@ class Game:
                 distance = shot.position.distance_to(asteroid.position)
                 if distance < shot.radius + asteroid.radius:
                     shot.kill()
-                    asteroid.kill()
+                    asteroid.split()
                     break
 
         return True
